@@ -12,7 +12,7 @@ from townsquare.auth.users import (
 from townsquare.db import session_scope
 
 
-def make_claims(email="alice@zingly.com", domain="zingly.com", verified=True):
+def make_claims(email="alice@example.com", domain="example.com", verified=True):
     return GoogleUserClaims(
         email=email,
         email_verified=verified,
@@ -27,8 +27,8 @@ def test_upsert_creates_user_on_first_login(fresh_db):
     claims = make_claims()
     with session_scope() as s:
         user = upsert_user_from_claims(s, claims)
-        assert user.email == "alice@zingly.com"
-        assert user.domain == "zingly.com"
+        assert user.email == "alice@example.com"
+        assert user.domain == "example.com"
         assert user.role == "member"
         assert user.is_active is True
 

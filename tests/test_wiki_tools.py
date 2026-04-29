@@ -12,7 +12,7 @@ def test_write_then_read(fresh_db):
             "body_markdown": "# Plan\n\n- step 1\n- step 2",
         },
         session_factory=session_scope,
-        actor_email="alice@zingly.com",
+        actor_email="alice@example.com",
     )
     assert write["ok"] is True
     assert write["created"] is True

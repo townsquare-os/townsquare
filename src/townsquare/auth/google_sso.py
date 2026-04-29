@@ -34,7 +34,7 @@ class GoogleWorkspaceSSO:
     Args:
         client_id: from Google Cloud Console OAuth client.
         client_secret: from Google Cloud Console OAuth client.
-        workspace_domain: e.g. "zingly.com". Login is rejected for any
+        workspace_domain: e.g. "example.com". Login is rejected for any
             other domain.
         scopes: OAuth scopes to request. The default list covers SSO +
             Gmail/Drive/Calendar read so a single grant covers all v0.1

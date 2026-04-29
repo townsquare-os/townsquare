@@ -47,7 +47,7 @@ def _seed(crypto: TokenCrypto, email: str, sources: list[tuple[str, str]]):
     claims = GoogleUserClaims(
         email=email,
         email_verified=True,
-        domain="zingly.com",
+        domain="example.com",
         name=email,
         picture=None,
         sub="x",
@@ -73,8 +73,8 @@ def _seed(crypto: TokenCrypto, email: str, sources: list[tuple[str, str]]):
 @pytest.mark.asyncio
 async def test_router_fans_out_and_attributes(fresh_db):
     crypto = TokenCrypto(Fernet.generate_key().decode())
-    _seed(crypto, "alice@zingly.com", [("gmail", "ya29.alice")])
-    _seed(crypto, "bob@zingly.com", [("gmail", "ya29.bob")])
+    _seed(crypto, "alice@example.com", [("gmail", "ya29.alice")])
+    _seed(crypto, "bob@example.com", [("gmail", "ya29.bob")])
 
     router = FederatedRouter(
         session_factory=session_scope,
@@ -82,13 +82,13 @@ async def test_router_fans_out_and_attributes(fresh_db):
         connector_registry={"gmail": FakeOK()},
     )
     targets = [
-        FanoutTarget(user_email="alice@zingly.com", source="gmail"),
-        FanoutTarget(user_email="bob@zingly.com", source="gmail"),
+        FanoutTarget(user_email="alice@example.com", source="gmail"),
+        FanoutTarget(user_email="bob@example.com", source="gmail"),
     ]
     result = await router.fanout(query="refund", targets=targets)
     assert len(result.items) == 2
     users = {item.user_email for item in result.items}
-    assert users == {"alice@zingly.com", "bob@zingly.com"}
+    assert users == {"alice@example.com", "bob@example.com"}
     sources = {item.source for item in result.items}
     assert sources == {"gmail"}
     assert result.errors == []
@@ -97,7 +97,7 @@ async def test_router_fans_out_and_attributes(fresh_db):
 @pytest.mark.asyncio
 async def test_router_isolates_failures(fresh_db):
     crypto = TokenCrypto(Fernet.generate_key().decode())
-    _seed(crypto, "alice@zingly.com", [("gmail", "ya29.alice"), ("drive", "ya29.alice2")])
+    _seed(crypto, "alice@example.com", [("gmail", "ya29.alice"), ("drive", "ya29.alice2")])
 
     router = FederatedRouter(
         session_factory=session_scope,
@@ -105,8 +105,8 @@ async def test_router_isolates_failures(fresh_db):
         connector_registry={"gmail": FakeOK(), "drive": FakeBoom()},
     )
     targets = [
-        FanoutTarget(user_email="alice@zingly.com", source="gmail"),
-        FanoutTarget(user_email="alice@zingly.com", source="drive"),
+        FanoutTarget(user_email="alice@example.com", source="gmail"),
+        FanoutTarget(user_email="alice@example.com", source="drive"),
     ]
     result = await router.fanout(query="x", targets=targets)
     assert len(result.items) == 1  # gmail succeeded
@@ -117,29 +117,29 @@ async def test_router_isolates_failures(fresh_db):
 @pytest.mark.asyncio
 async def test_selector_returns_all_active_connections(fresh_db):
     crypto = TokenCrypto(Fernet.generate_key().decode())
-    _seed(crypto, "alice@zingly.com", [("gmail", "ya29.a")])
-    _seed(crypto, "bob@zingly.com", [("drive", "ya29.b")])
+    _seed(crypto, "alice@example.com", [("gmail", "ya29.a")])
+    _seed(crypto, "bob@example.com", [("drive", "ya29.b")])
 
     selector = Selector(session_factory=session_scope)
-    targets = await selector.select(query="anything", asking_user="alice@zingly.com")
+    targets = await selector.select(query="anything", asking_user="alice@example.com")
     assert len(targets) == 2
     by_user = {t.user_email: t.source for t in targets}
-    assert by_user == {"alice@zingly.com": "gmail", "bob@zingly.com": "drive"}
+    assert by_user == {"alice@example.com": "gmail", "bob@example.com": "drive"}
 
 
 @pytest.mark.asyncio
 async def test_selector_respects_explicit_filters(fresh_db):
     crypto = TokenCrypto(Fernet.generate_key().decode())
-    _seed(crypto, "alice@zingly.com", [("gmail", "ya29.a"), ("drive", "ya29.a2")])
-    _seed(crypto, "bob@zingly.com", [("gmail", "ya29.b")])
+    _seed(crypto, "alice@example.com", [("gmail", "ya29.a"), ("drive", "ya29.a2")])
+    _seed(crypto, "bob@example.com", [("gmail", "ya29.b")])
 
     selector = Selector(session_factory=session_scope)
     targets = await selector.select(
         query="x",
-        asking_user="alice@zingly.com",
-        explicit_users=["alice@zingly.com"],
+        asking_user="alice@example.com",
+        explicit_users=["alice@example.com"],
         explicit_sources=["gmail"],
     )
     assert len(targets) == 1
-    assert targets[0].user_email == "alice@zingly.com"
+    assert targets[0].user_email == "alice@example.com"
     assert targets[0].source == "gmail"

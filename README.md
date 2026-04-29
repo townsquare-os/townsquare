@@ -146,4 +146,4 @@ Apache License 2.0.
 
 ## Built by
 
-[Swathi](https://github.com/SwathiMystery) for [Zingly](https://zingly.com), released as OSS so any company can run their own.
+[Swathi](https://github.com/SwathiMystery), released as OSS so any company can run their own.

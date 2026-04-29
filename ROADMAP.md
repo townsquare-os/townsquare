@@ -1,4 +1,4 @@
-# townsquare Roadmap — 10 weeks from scaffold to Zingly go-live to OSS launch
+# townsquare Roadmap — 10 weeks from scaffold to first deployment to OSS launch
 
 This is a living document. Weeks slide based on real progress.
 
@@ -60,22 +60,22 @@ This is a living document. Weeks slide based on real progress.
 - GitHub via fine-grained PAT (per-user)
 - `query_user_github`: search issues + PRs in repos the user can see
 - Connect/disconnect UI flows for both
-- Re-deploy to Zingly staging
-- Onboard 3 Zingly employees as alpha users
+- Re-deploy to first-deployment staging
+- Onboard 3 alpha users at the first deployment
 
-## Week 7 — Zingly soft launch
+## Week 7 — Soft launch at first deployment
 
-- Onboard remaining Zingly employees
+- Onboard the rest of the team at the first deployment
 - Production monitoring
 - Performance tuning (query latency p95 target: < 5 s)
 - Bug fixes from alpha feedback
 - README polished with screenshots
 
-## Week 8 — Zingly go-live + v0.1.0 release
+## Week 8 — Go-live + v0.1.0 release
 
-- All Zingly employees actively using townsquare
+- Everyone at the first deployment actively using townsquare
 - v0.1.0 tagged on GitHub; PyPI release
-- Internal Zingly case study written
+- Internal case study written
 
 ## Weeks 9–10 — Public OSS launch
 
@@ -114,7 +114,7 @@ This is a living document. Weeks slide based on real progress.
 
 ### Voice integration (with hummem)
 
-Adishen voice agents could query townsquare for caller context, sub-300 ms,
+Voice agents could query townsquare for caller context, sub-300 ms,
 via hummem. "Voice agent reaches into the company brain at <300 ms."
 
 ### A2A protocol

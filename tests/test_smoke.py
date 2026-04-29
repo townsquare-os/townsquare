@@ -90,7 +90,7 @@ def test_google_sso_verify_domain_rejects_mismatch():
         GoogleUserClaims,
     )
 
-    sso = GoogleWorkspaceSSO(client_id="x", client_secret="y", workspace_domain="zingly.com")
+    sso = GoogleWorkspaceSSO(client_id="x", client_secret="y", workspace_domain="example.com")
     bad = GoogleUserClaims(
         email="alice@gmail.com",
         email_verified=True,
@@ -109,11 +109,11 @@ def test_google_sso_verify_domain_rejects_unverified_email():
         GoogleUserClaims,
     )
 
-    sso = GoogleWorkspaceSSO(client_id="x", client_secret="y", workspace_domain="zingly.com")
+    sso = GoogleWorkspaceSSO(client_id="x", client_secret="y", workspace_domain="example.com")
     unverified = GoogleUserClaims(
-        email="alice@zingly.com",
+        email="alice@example.com",
         email_verified=False,
-        domain="zingly.com",
+        domain="example.com",
         name="Alice",
         picture=None,
         sub="1",
@@ -125,11 +125,11 @@ def test_google_sso_verify_domain_rejects_unverified_email():
 def test_google_sso_verify_domain_accepts_match():
     from townsquare.auth.google_sso import GoogleUserClaims
 
-    sso = GoogleWorkspaceSSO(client_id="x", client_secret="y", workspace_domain="zingly.com")
+    sso = GoogleWorkspaceSSO(client_id="x", client_secret="y", workspace_domain="example.com")
     good = GoogleUserClaims(
-        email="alice@zingly.com",
+        email="alice@example.com",
         email_verified=True,
-        domain="zingly.com",
+        domain="example.com",
         name="Alice",
         picture=None,
         sub="1",

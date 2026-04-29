@@ -15,7 +15,7 @@ from townsquare.db import session_scope
 from townsquare.db.models import Connection
 
 
-def _seed_user(email="alice@zingly.com"):
+def _seed_user(email="alice@example.com"):
     claims = GoogleUserClaims(
         email=email,
         email_verified=True,
@@ -35,14 +35,14 @@ def test_upsert_connection_creates_row(fresh_db):
         upsert_connection(
             session=s,
             crypto=crypto,
-            user_email="alice@zingly.com",
+            user_email="alice@example.com",
             source="slack",
             access_token="xoxp-real-user-token",
             granted_scopes=["search:read"],
         )
 
     with session_scope() as s:
-        token = get_user_token(s, crypto, "alice@zingly.com", "slack")
+        token = get_user_token(s, crypto, "alice@example.com", "slack")
     assert token == "xoxp-real-user-token"
 
 
@@ -53,7 +53,7 @@ def test_upsert_connection_updates_existing(fresh_db):
         upsert_connection(
             session=s,
             crypto=crypto,
-            user_email="alice@zingly.com",
+            user_email="alice@example.com",
             source="github",
             access_token="ghp_old",
         )
@@ -61,14 +61,14 @@ def test_upsert_connection_updates_existing(fresh_db):
         upsert_connection(
             session=s,
             crypto=crypto,
-            user_email="alice@zingly.com",
+            user_email="alice@example.com",
             source="github",
             access_token="ghp_new",
         )
         rows = (
             s.execute(
                 select(Connection).where(
-                    Connection.user_email == "alice@zingly.com",
+                    Connection.user_email == "alice@example.com",
                     Connection.source == "github",
                 )
             )
@@ -77,7 +77,7 @@ def test_upsert_connection_updates_existing(fresh_db):
         )
     assert len(rows) == 1
     with session_scope() as s:
-        assert get_user_token(s, crypto, "alice@zingly.com", "github") == "ghp_new"
+        assert get_user_token(s, crypto, "alice@example.com", "github") == "ghp_new"
 
 
 def test_deactivate_connection_flips_flag(fresh_db):
@@ -87,15 +87,15 @@ def test_deactivate_connection_flips_flag(fresh_db):
         upsert_connection(
             session=s,
             crypto=crypto,
-            user_email="alice@zingly.com",
+            user_email="alice@example.com",
             source="slack",
             access_token="xoxp-fake",
         )
     with session_scope() as s:
-        ok = deactivate_connection(s, "alice@zingly.com", "slack")
+        ok = deactivate_connection(s, "alice@example.com", "slack")
     assert ok is True
     with session_scope() as s:
-        token = get_user_token(s, crypto, "alice@zingly.com", "slack")
+        token = get_user_token(s, crypto, "alice@example.com", "slack")
     # get_user_token only returns active rows.
     assert token is None
 
@@ -103,5 +103,5 @@ def test_deactivate_connection_flips_flag(fresh_db):
 def test_deactivate_missing_returns_false(fresh_db):
     _seed_user()
     with session_scope() as s:
-        ok = deactivate_connection(s, "alice@zingly.com", "slack")
+        ok = deactivate_connection(s, "alice@example.com", "slack")
     assert ok is False
