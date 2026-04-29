@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" role="img" aria-label="townsquare — the self-hostable company OS">
+  <title>townsquare</title>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b132b"/>
+      <stop offset="100%" stop-color="#1c2541"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5bc0be"/>
+      <stop offset="100%" stop-color="#a99cf0"/>
+    </linearGradient>
+    <radialGradient id="hub" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a99cf0" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#5bc0be" stop-opacity="0.4"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1280" height="360" fill="url(#bg)"/>
+
+  <!-- Subtle grid -->
+  <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+    <line x1="0" y1="90" x2="1280" y2="90"/>
+    <line x1="0" y1="270" x2="1280" y2="270"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="80" y="140" font-family="Inter, SF Pro Display, system-ui, sans-serif" font-weight="800" font-size="84" fill="#ffffff" letter-spacing="-2">townsquare</text>
+
+  <!-- Accent rule -->
+  <rect x="80" y="158" width="120" height="4" fill="url(#accent)" rx="2"/>
+
+  <!-- Tagline -->
+  <text x="80" y="208" font-family="Inter, SF Pro Text, system-ui, sans-serif" font-weight="400" font-size="28" fill="#d6dbf3">The self-hostable company OS.</text>
+
+  <!-- Subtitle -->
+  <text x="80" y="248" font-family="Inter, SF Pro Text, system-ui, sans-serif" font-weight="400" font-size="17" fill="#8d9bbf">Google Workspace SSO. Per-user data connections.</text>
+  <text x="80" y="272" font-family="Inter, SF Pro Text, system-ui, sans-serif" font-weight="400" font-size="17" fill="#8d9bbf">Privacy-preserving federation. Apache 2.0.</text>
+
+  <!-- Pillars -->
+  <g transform="translate(80, 320)" font-family="Inter, SF Mono, ui-monospace, monospace" font-size="12" font-weight="700" letter-spacing="2.5">
+    <text x="0" y="0" fill="#ffffff">SELF-HOST</text>
+    <circle cx="100" cy="-4" r="2" fill="#5bc0be"/>
+    <text x="113" y="0" fill="#ffffff">SSO</text>
+    <circle cx="155" cy="-4" r="2" fill="#5bc0be"/>
+    <text x="168" y="0" fill="#ffffff">PER-USER OAUTH</text>
+    <circle cx="320" cy="-4" r="2" fill="#5bc0be"/>
+    <text x="333" y="0" fill="#ffffff">FEDERATION</text>
+    <circle cx="448" cy="-4" r="2" fill="#5bc0be"/>
+    <text x="461" y="0" fill="#ffffff">APACHE 2.0</text>
+  </g>
+
+  <!-- Right-side: federated graph illustration. Central hub + 5 user nodes
+       each fanning to source icons. Captures the "one question → many users
+       → many sources" mental model. -->
+  <g transform="translate(820, 70)">
+    <!-- Connecting lines hub → users -->
+    <g stroke="url(#accent)" stroke-width="1.4" opacity="0.7" fill="none">
+      <line x1="190" y1="120" x2="60" y2="40"/>
+      <line x1="190" y1="120" x2="60" y2="200"/>
+      <line x1="190" y1="120" x2="350" y2="40"/>
+      <line x1="190" y1="120" x2="350" y2="200"/>
+      <line x1="190" y1="120" x2="60" y2="120"/>
+    </g>
+
+    <!-- Hub -->
+    <circle cx="190" cy="120" r="36" fill="url(#hub)"/>
+    <circle cx="190" cy="120" r="36" fill="none" stroke="#a99cf0" stroke-width="1"/>
+    <text x="190" y="125" text-anchor="middle"
+          font-family="Inter, SF Mono, ui-monospace, monospace" font-size="11"
+          font-weight="700" fill="#0b132b" letter-spacing="1">TS</text>
+
+    <!-- 5 user nodes; each labelled with a per-user source label -->
+    <g font-family="Inter, SF Mono, ui-monospace, monospace" font-size="10" fill="#d6dbf3" font-weight="600">
+      <g transform="translate(60, 40)">
+        <circle r="20" fill="#1c2541" stroke="#5bc0be" stroke-width="1.5"/>
+        <text text-anchor="middle" y="3">alice</text>
+        <text text-anchor="middle" y="35" font-size="9" fill="#8d9bbf">gmail</text>
+      </g>
+      <g transform="translate(60, 200)">
+        <circle r="20" fill="#1c2541" stroke="#5bc0be" stroke-width="1.5"/>
+        <text text-anchor="middle" y="3">bob</text>
+        <text text-anchor="middle" y="35" font-size="9" fill="#8d9bbf">drive</text>
+      </g>
+      <g transform="translate(60, 120)">
+        <circle r="20" fill="#1c2541" stroke="#5bc0be" stroke-width="1.5"/>
+        <text text-anchor="middle" y="3">carol</text>
+        <text text-anchor="middle" y="35" font-size="9" fill="#8d9bbf">slack</text>
+      </g>
+      <g transform="translate(350, 40)">
+        <circle r="20" fill="#1c2541" stroke="#5bc0be" stroke-width="1.5"/>
+        <text text-anchor="middle" y="3">dan</text>
+        <text text-anchor="middle" y="35" font-size="9" fill="#8d9bbf">github</text>
+      </g>
+      <g transform="translate(350, 200)">
+        <circle r="20" fill="#1c2541" stroke="#5bc0be" stroke-width="1.5"/>
+        <text text-anchor="middle" y="3">eve</text>
+        <text text-anchor="middle" y="35" font-size="9" fill="#8d9bbf">calendar</text>
+      </g>
+    </g>
+  </g>
+</svg>
