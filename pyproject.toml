@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "townsquare"
+version = "0.1.0"
+description = "The self-hostable open-source company OS. Google Workspace SSO. Per-user data connections. Federated query plane. Apache 2.0."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "Swathi" }]
+keywords = ["company-os", "company-brain", "knowledge-base", "agent", "google-workspace", "self-hosted", "mcp", "open-source"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: AsyncIO",
+    "Framework :: FastAPI",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "pydantic>=2.5",
+    "pydantic-settings>=2.0",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "psycopg[binary]>=3.1",
+    "authlib>=1.3",
+    "itsdangerous>=2.1",
+    "cryptography>=42.0",
+    "httpx>=0.27",
+    "anthropic>=0.40.0",
+    "click>=8.0",
+    "jinja2>=3.1",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+google = ["google-auth>=2.28", "google-auth-oauthlib>=1.2", "google-api-python-client>=2.120"]
+slack = ["slack-sdk>=3.27"]
+notion = ["notion-client>=2.2"]
+github = ["pygithub>=2.3"]
+all = ["google-auth>=2.28", "google-auth-oauthlib>=1.2", "google-api-python-client>=2.120", "slack-sdk>=3.27", "notion-client>=2.2", "pygithub>=2.3"]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "ruff==0.15.10", "httpx>=0.27"]
+
+[project.scripts]
+townsquare = "townsquare.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/townsquare-os/townsquare"
+Repository = "https://github.com/townsquare-os/townsquare"
+Issues = "https://github.com/townsquare-os/townsquare/issues"
+Changelog = "https://github.com/townsquare-os/townsquare/releases"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B", "UP"]
+ignore = ["E501"]

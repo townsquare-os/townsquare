@@ -1,0 +1,39 @@
+services:
+  townsquare-db:
+    image: pgvector/pgvector:pg16
+    container_name: townsquare-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-townsquare}
+      POSTGRES_PASSWORD: ${DB_PASS:-townsquare}
+      POSTGRES_DB: ${DB_NAME:-townsquare}
+    volumes:
+      - townsquare-pgdata:/var/lib/postgresql/data
+    networks:
+      - townsquare
+
+  townsquare-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: townsquare-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: ../.env
+        required: false
+    environment:
+      DB_URL: postgresql+psycopg://${DB_USER:-townsquare}:${DB_PASS:-townsquare}@townsquare-db:5432/${DB_NAME:-townsquare}
+    depends_on:
+      - townsquare-db
+    networks:
+      - townsquare
+
+networks:
+  townsquare:
+
+volumes:
+  townsquare-pgdata:
