@@ -1,0 +1,60 @@
+# townsquare — self-host docker-compose
+#
+#   docker compose up -d           # start
+#   docker compose logs -f api     # tail logs
+#   docker compose down            # stop
+#   docker compose down -v         # stop + delete data (DANGER)
+#
+# The .env file at the repo root is loaded automatically.
+# See example.env for the full list of variables and how to fill them.
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: townsquare-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-townsquare}
+      POSTGRES_PASSWORD: ${DB_PASS:-townsquare}
+      POSTGRES_DB: ${DB_NAME:-townsquare}
+    volumes:
+      - townsquare-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-townsquare} -d ${DB_NAME:-townsquare}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - townsquare
+    # Exposing the port is OPTIONAL — only enable if you want to connect
+    # from your host. Comment out for tighter prod posture.
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: townsquare-api
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT:-8000}:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # DB_URL is overridden inside the container so the API talks to the
+      # `db` service over the docker network rather than localhost.
+      DB_URL: postgresql+psycopg://${DB_USER:-townsquare}:${DB_PASS:-townsquare}@db:5432/${DB_NAME:-townsquare}
+      RUNTIME_ENV: ${RUNTIME_ENV:-prod}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - townsquare
+
+networks:
+  townsquare:
+
+volumes:
+  townsquare-pgdata:

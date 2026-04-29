@@ -10,7 +10,6 @@ from townsquare.auth.users import (
     upsert_user_from_claims,
 )
 from townsquare.db import session_scope
-from townsquare.db.models import Connection
 
 
 def make_claims(email="alice@zingly.com", domain="zingly.com", verified=True):
@@ -81,7 +80,11 @@ def test_token_roundtrip_via_get_user_token(fresh_db):
     with session_scope() as s:
         upsert_user_from_claims(s, claims)
         store_google_connections(
-            session=s, crypto=crypto, user_email=claims.email, token_dict=token, granted_scopes=granted
+            session=s,
+            crypto=crypto,
+            user_email=claims.email,
+            token_dict=token,
+            granted_scopes=granted,
         )
     with session_scope() as s:
         recovered = get_user_token(s, crypto, claims.email, "gmail")

@@ -9,7 +9,7 @@ from townsquare.auth.crypto import TokenCrypto
 from townsquare.auth.google_sso import GoogleUserClaims
 from townsquare.auth.users import store_google_connections, upsert_user_from_claims
 from townsquare.connectors.base import Item
-from townsquare.db import get_session_factory, session_scope
+from townsquare.db import session_scope
 from townsquare.federation.router import FanoutTarget, FederatedRouter
 from townsquare.federation.selector import Selector
 
@@ -21,7 +21,9 @@ class FakeOK:
 
     async def search(self, query, access_token, limit=10):
         return [
-            Item(id="m1", title=f"hit:{query}", snippet=f"token={access_token[:6]}", source="gmail"),
+            Item(
+                id="m1", title=f"hit:{query}", snippet=f"token={access_token[:6]}", source="gmail"
+            ),
         ]
 
     async def fetch(self, item_id, access_token):
