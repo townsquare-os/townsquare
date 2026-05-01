@@ -1,14 +1,12 @@
 # Examples
 
-Runnable scripts that show one feature each. They import townsquare modules directly — no HTTP calls, no Docker exec. Think of them as reference implementations for specific workflows.
+Runnable scripts that show one feature each. Some import `townsquare.*` directly (library usage); others call a running server’s HTTP endpoints (integration patterns). Think of them as reference implementations for specific workflows.
 
 ## Available scripts
 
-| Script                                  | What it does |
-| --------------------------------------- | ------------ |
-| _(empty — first contributor adds here)_ |              |
-
-<!-- When adding: script name, one-line description. Update this table. -->
+| Script                                   | What it does |
+| ---------------------------------------- | ------------ |
+| _(none yet — be the first contributor!)_ |              |
 
 ## How to run
 
@@ -28,7 +26,15 @@ Install Python dependencies locally (examples need them):
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e ".[google,all]"
+
+# Minimal (works for most examples)
+pip install -e ".[dev]"
+
+# If the example uses external connectors (Slack, Notion, GitHub, etc.)
+pip install -e ".[all,dev]"
+
+# Or, for very simple examples with no extras
+pip install -e .
 ```
 
 Run any example:
@@ -43,7 +49,8 @@ Each script reads `.env` from the repo root. Some need extra connectors (`SLACK_
 ## What makes a good example
 
 - Demonstrates **one** workflow (federated query, connector usage, agent invocation, wiki/CRM operations, user management).
-- Imports from `townsquare.*` — shows how to use the library programmatically.
+- Uses either `townsquare.*` imports (library usage) or HTTP calls to a running server (integration patterns).
+- Loads `.env` from the repo root (e.g., via `python-dotenv` or `townsquare.settings.get_settings()`).
 - Inline comments explaining key decisions and API patterns.
 - Graceful error handling with helpful messages.
 - Header comment listing required `.env` variables beyond the defaults.
