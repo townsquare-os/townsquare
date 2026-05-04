@@ -7,6 +7,8 @@ from townsquare.auth.users import upsert_user_from_claims
 from townsquare.cli import main
 from townsquare.db import session_scope
 from townsquare.db.models import User
+from townsquare.db.models import Connection, QueryLog
+from datetime import datetime, UTC
 
 
 def _make(email="alice@example.com"):
@@ -95,3 +97,46 @@ def test_version_command():
     out = runner.invoke(main, ["version"])
     assert out.exit_code == 0
     assert "townsquare 0.1.0" in out.output
+
+def test_admin_stats_empty(fresh_db):
+    runner = CliRunner()
+    out = runner.invoke(main, ["admin", "stats"])
+
+    assert out.exit_code == 0
+    assert "USERS" in out.output
+    assert "0 active" in out.output
+    assert "total             0" in out.output
+
+def test_admin_stats_populated(fresh_db):
+    _seed("alice@example.com")
+
+    with session_scope() as s:
+        user = s.get(User, "alice@example.com")
+
+        # Add connection
+        s.add(Connection(
+            user_email=user.email,
+            source="gmail",
+            oauth_token_encrypted=b"dummy",   # ✅ REQUIRED
+            refresh_token_encrypted=None,
+            is_active=True
+        ))
+
+        # Add query log
+        s.add(QueryLog(
+            user_email=user.email,
+            query_text="who's working on auth?",
+            latency_ms=3.5,
+            cost_usd=0.02,
+            created_at=datetime.now(UTC)
+        ))
+
+    runner = CliRunner()
+    out = runner.invoke(main, ["admin", "stats"])
+
+    assert out.exit_code == 0
+    assert "1 active" in out.output
+    assert "gmail" in out.output
+    assert "1 users" in out.output
+    assert "avg latency" in out.output
+    assert "who's working on auth?" in out.output

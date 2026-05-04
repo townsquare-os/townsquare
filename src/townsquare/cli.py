@@ -190,5 +190,78 @@ def _redact_db_url(url: str) -> str:
     return url
 
 
+@admin.command(name="stats")
+def stats() -> None:
+    """Print usage summary."""
+    from datetime import UTC, datetime, timedelta
+
+    from sqlalchemy import func
+
+    from townsquare.db import session_scope
+    from townsquare.db.models import Connection, QueryLog, User
+
+    now = datetime.now(UTC)
+    week_ago = now - timedelta(days=7)
+
+    with session_scope() as s:
+        # Active users
+        active_users = (
+            s.query(func.count(User.email)).filter(User.is_active.is_(True)).scalar() or 0
+        )
+
+        # Connections per source
+        rows = (
+            s.query(Connection.source, func.count(Connection.id))
+            .filter(Connection.is_active.is_(True))
+            .group_by(Connection.source)
+            .all()
+        )
+        conn_map = {k: v for k, v in rows}
+
+        # Query stats (last 7 days)
+        total, avg_latency, total_cost = (
+            s.query(
+                func.count(QueryLog.id),
+                func.avg(QueryLog.latency_ms),
+                func.sum(QueryLog.cost_usd),
+            )
+            .filter(QueryLog.created_at >= week_ago)
+            .one()
+        )
+
+        total = total or 0
+        avg_latency = float(avg_latency or 0)
+        total_cost = float(total_cost or 0)
+
+        # Last query
+        last = s.query(QueryLog).order_by(QueryLog.created_at.desc()).first()
+
+        # Output
+        click.echo(f"USERS               {active_users} active")
+        click.echo(f"QUERIES this week   {total}")
+        click.echo("")
+        click.echo("CONNECTIONS")
+
+        for source in ["gmail", "drive", "calendar", "slack", "github"]:
+            count = conn_map.get(source, 0)
+            click.echo(f"  {source:<16}{count} users")
+
+        click.echo("")
+        click.echo("QUERIES (last 7 days)")
+        click.echo(f"  total             {total}")
+        click.echo(f"  avg latency       {avg_latency / 1000:.1f}s")
+        click.echo(f"  total cost USD    ${total_cost:.2f}")
+
+        click.echo("")
+        click.echo("LAST QUERY")
+
+        if last:
+            email = getattr(last, "user_email", "—")
+            query = getattr(last, "query_text", "")
+            click.echo(f'  {email} — "{query}"')
+        else:
+            click.echo("  —")
+
+
 if __name__ == "__main__":
     main()
