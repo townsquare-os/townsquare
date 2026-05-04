@@ -193,14 +193,14 @@ def _redact_db_url(url: str) -> str:
 @admin.command(name="stats")
 def stats() -> None:
     """Print usage summary."""
-    from datetime import UTC, datetime, timedelta
+    from datetime import datetime, timedelta
 
     from sqlalchemy import func
 
     from townsquare.db import session_scope
     from townsquare.db.models import Connection, QueryLog, User
 
-    now = datetime.now(UTC)
+    now = datetime.utcnow()
     week_ago = now - timedelta(days=7)
 
     with session_scope() as s:

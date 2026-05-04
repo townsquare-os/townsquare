@@ -8,7 +8,7 @@ from townsquare.cli import main
 from townsquare.db import session_scope
 from townsquare.db.models import User
 from townsquare.db.models import Connection, QueryLog
-from datetime import datetime, UTC
+from datetime import datetime
 
 
 def _make(email="alice@example.com"):
@@ -128,7 +128,7 @@ def test_admin_stats_populated(fresh_db):
             query_text="who's working on auth?",
             latency_ms=3.5,
             cost_usd=0.02,
-            created_at=datetime.now(UTC)
+            created_at=datetime.utcnow()
         ))
 
     runner = CliRunner()
