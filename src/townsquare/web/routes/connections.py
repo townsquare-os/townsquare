@@ -57,6 +57,13 @@ SOURCE_CATALOG = [
         "connect_url": None,
         "disconnect_url": None,
     },
+    {
+        "id": "linear",
+        "name": "Linear",
+        "description": "Per-user Linear search via personal access token.",
+        "connect_url": "/connections/linear/connect",
+        "disconnect_url": "/connections/linear/disconnect",
+    },
 ]
 
 
