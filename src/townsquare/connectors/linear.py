@@ -12,7 +12,7 @@ class LinearConnector:
     required_scopes = ["read"]
     supports_update = False
 
-    async def search(self,query, access_token, limit):
+    async def search(self, query, access_token, limit):
         headers = {"Authorization": f"Bearer {access_token}"}
         query_str = """
         query SearchIssues($query: String!, $limit: Int!) {
@@ -46,7 +46,7 @@ class LinearConnector:
                 for issue in issues
             ]
 
-    async def fetch(self,item_id, access_token):
+    async def fetch(self, item_id, access_token):
         headers = {"Authorization": f"Bearer {access_token}"}
         query_str = """
         query GetIssue($id: String!) {
