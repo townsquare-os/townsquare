@@ -98,6 +98,7 @@ def test_version_command():
     assert out.exit_code == 0
     assert "townsquare 0.1.0" in out.output
 
+
 def test_admin_stats_empty(fresh_db):
     runner = CliRunner()
     out = runner.invoke(main, ["admin", "stats"])
@@ -107,6 +108,7 @@ def test_admin_stats_empty(fresh_db):
     assert "0 active" in out.output
     assert "total             0" in out.output
 
+
 def test_admin_stats_populated(fresh_db):
     _seed("alice@example.com")
 
@@ -114,22 +116,26 @@ def test_admin_stats_populated(fresh_db):
         user = s.get(User, "alice@example.com")
 
         # Add connection
-        s.add(Connection(
-            user_email=user.email,
-            source="gmail",
-            oauth_token_encrypted=b"dummy",   # ✅ REQUIRED
-            refresh_token_encrypted=None,
-            is_active=True
-        ))
+        s.add(
+            Connection(
+                user_email=user.email,
+                source="gmail",
+                oauth_token_encrypted=b"dummy",  # ✅ REQUIRED
+                refresh_token_encrypted=None,
+                is_active=True,
+            )
+        )
 
         # Add query log
-        s.add(QueryLog(
-            user_email=user.email,
-            query_text="who's working on auth?",
-            latency_ms=4200.0,
-            cost_usd=0.02,
-            created_at=datetime.utcnow()
-        ))
+        s.add(
+            QueryLog(
+                user_email=user.email,
+                query_text="who's working on auth?",
+                latency_ms=4200.0,
+                cost_usd=0.02,
+                created_at=datetime.utcnow(),
+            )
+        )
 
     runner = CliRunner()
     out = runner.invoke(main, ["admin", "stats"])
@@ -140,4 +146,3 @@ def test_admin_stats_populated(fresh_db):
     assert "1 users" in out.output
     assert "avg latency" in out.output
     assert "who's working on auth?" in out.output
-    
